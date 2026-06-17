@@ -4,16 +4,6 @@ page {
   display: flex;
   flex-direction: column;
 }
-.scrollarea {
-  flex: 1;
-  overflow-y: hidden;
-}
-/* 页面整体样式 */
-.page-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* 占满整个视口高度 */
-}
 /* 中间内容区域：自动填充剩余空间，可滚动 */
 .content-area {
   flex: 1; /* 占据剩余所有空间 */
@@ -21,57 +11,73 @@ page {
   padding: 20rpx;
   padding-bottom: 120rpx; /* 为底部固定按钮预留空间 */
 }
-
-/* 页面内容样式 */
-.page-content {
-  min-height: 100%;
+.container {
+  padding: 40px 20px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #2196F3 0%, #1976D2 100%);
 }
 
-/* 顶部吸顶标题栏 */
-.sticky-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: #fff;
-  padding: 20rpx;
-  font-size: 32rpx;
-  font-weight: bold;
+.header {
   text-align: center;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
-}
-.btn.listdata{
-  flex: 1;
-  width: 28%;
-  height: 280rpx;
-  line-height: 80rpx;
-  font-size: 28rpx;
-  border-radius: 10rpx;
-  border: 1rpx solid #ddd;
-  transition: all 0.3s;
-}
-.device_list{
-
-}
-.cell-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr; /* 每行4列 */
-
-  gap: 10rpx;
-  padding: 10rpx;
+  margin-bottom: 40px;
+  color: white;
 }
 
-.cell-item {
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.card-container {
   display: flex;
-  width: 100%;
-
+  flex-direction: column;
+  gap: 16px;
 }
-.btn.listdata.cell{
+
+.nav-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.nav-card:active {
+  transform: scale(0.98);
+}
+
+.card-icon {
+  font-size: 36px;
+  margin-right: 16px;
+}
+
+.card-text {
   flex: 1;
-  width: 28%;
-  height: 180rpx;
-  line-height: 80rpx;
-  font-size: 28rpx;
-  border-radius: 10rpx;
-  border: 1rpx solid #ddd;
-  transition: all 0.3s;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: #999;
+}
+
+.card-arrow {
+  font-size: 24px;
+  color: #ccc;
 }

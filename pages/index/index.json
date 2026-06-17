@@ -1,4 +1,5 @@
 {
+  "navigationBarTitleText": "电池管理系统",
   "usingComponents": {
     "pack-progress":"/components/battery_progress/battery_progress",
     "bottom":"/components/bottom_bav/Bottom_nav",

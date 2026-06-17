@@ -25,13 +25,14 @@
   <view class="data-section">
     <view class="section-header">
       <text class="section-title">单体电压</text>
-      <text class="section-badge">{{cellVoltages.length}}个电芯</text>
+      <text class="section-badge">{{cell_num}}个电芯</text>
     </view>
     
     <cell-voltage 
       cellData="{{cellVoltages}}"
+      displayCount="{{cell_num}}"
       title="单体电压"
-      unit="V"
+      unit="mV"
       columns="4"
       bind:celltap="onCellClick"
     />
@@ -41,11 +42,12 @@
   <view class="data-section">
     <view class="section-header">
       <text class="section-title">温度</text>
-      <text class="section-badge">{{temperatures.length}}个探头</text>
+      <text class="section-badge">{{temp_num}}个探头</text>
     </view>
     
     <cell-voltage 
       cellData="{{temperatures}}"
+      displayCount="{{temp_num}}"
       title="温度"
       unit="℃"
       columns="3"

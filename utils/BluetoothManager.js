@@ -320,16 +320,15 @@ export default class BluetoothManager {
   _listenCharacteristicValueChange() {
     wx.onBLECharacteristicValueChange((res) => {
       console.log('[蓝牙管理器] 收到数据', res);
-      
+      const rawBuffer = res.value;
       // 将二进制数据转为十六进制字符串
       const hexValue = this._ab2hex(res.value);
-      
       if (this._callbacks.onDataReceived) {
+        // 同时传递原始 ArrayBuffer 和十六进制字符串
         this._callbacks.onDataReceived({
-          deviceId: res.deviceId,
-          serviceId: res.serviceId,
-          characteristicId: res.characteristicId,
-          value: hexValue
+          value: rawBuffer,
+          hexStr: hexValue,
+          byteLength: rawBuffer.byteLength
         });
       }
     });

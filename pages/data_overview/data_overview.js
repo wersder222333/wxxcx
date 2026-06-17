@@ -76,15 +76,16 @@ Page({
   },
 
   // 更新数据
-  updateData() {
+  updateData() 
+  {
     // 从全局数据获取电池数据
     const batteryData = app.globalData.batteryData;
-    
+    console.log('[ 更新数据概览 ] batteryData=',batteryData);
     // 模拟数据（实际使用时注释掉）
-    const mockData = this.getMockData();
+    // const mockData = this.getMockData();
     
     // 使用真实数据或模拟数据
-    const data = batteryData.voltage ? batteryData : mockData;
+    const data = batteryData;
     
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;

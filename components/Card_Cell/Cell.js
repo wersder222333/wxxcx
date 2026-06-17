@@ -8,6 +8,11 @@ Component({
       type: Array,
       value: []
     },
+    //要显示的卡片个数
+    displayCount:{
+      type: Number,
+      value: 4
+    },
     // 标题文字
     title: {
       type: String,
@@ -34,7 +39,9 @@ Component({
       value: ''
     }
   },
-
+  data:{
+    displayArray:[]
+  },
   /**
    * 组件的方法列表
    */
@@ -49,6 +56,18 @@ Component({
         index: index,
         cellData: cell
       });
+    },
+    processData(){
+      const { cellData, displayCount } = this.data;
+      let count = displayCount;
+      if (count <= 0) {
+        count = cellData.length;
+      }
+      count = Math.min(count, cellData.length);
+      //切片处理
+      const displayArray = cellData.slice(0, count);
+      this.setData({ displayArray });
+      console.log(`[组件] 数据已处理: 共 ${cellData.length} 个, 显示 ${count} 个`);
     }
   },
 
@@ -60,5 +79,15 @@ Component({
       // 组件加载时的初始化逻辑
       console.log('CellVoltage组件已加载');
     }
+  },
+  /**
+   * 监听属性变化
+   */
+  observers: {
+    'cellData, displayCount': function(cellData, displayCount) {
+      // 当 cellData 或 displayCount 变化时重新处理数据
+      this.processData();
+    }
   }
 })
+ 

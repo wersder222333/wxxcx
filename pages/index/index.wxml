@@ -1,116 +1,38 @@
-<!--顶部搜索栏-->
-<view class="sticky-header" style="position: sticky; top: 0; z-index: 100; background: #fff;"
-      wx:if="{{mainwindow_Index === 0}}"
->
-  <input class="weui-input" placeholder="搜索"/>
-</view>
+
 <!--数据栏-->
 <view class="content-area">
-  <view wx:if="{{mainwindow_Index === 0}}">
-    <image src="{{BT_Scan_icon}}" mode="scaleToFill"></image>
-    <view class="devices_summary">已发现 {{BT_device.length}} 个外围设备：</view>
-      <scroll-view class="device_list" scroll-y scroll-with-animation>
-        <view wx:for="{{BT_device}}" wx:key="index"
-          data-device-id="{{item.deviceId}}"
-          data-name="{{item.name || item.localName}}"
-          bindtap="createBLEConnection" 
-          class="device_item"
-          hover-class="device_item_hover">
-          <view style="font-size: 16px;">{{item.name}}</view>
-          <view style="font-size: 10px">信号强度: {{item.RSSI}}dBm ({{utils.max(0, item.RSSI + 100)}}%)</view>
-          <view style="font-size: 10px">UUID: {{item.deviceId}}</view>
-          <view style="font-size: 10px">Service数量: {{utils.len(item.advertisServiceUUIDs)}}</view>
-        </view>
-      </scroll-view>
-  </view>
-  <view wx:if="{{mainwindow_Index === 1}}">
-    <view style="display: flex">
-      <button>充电</button> <button>放电</button>
-    </view>
-    <view class="Pack_soc_page">
-      <pack-progress
-      percent="{{batteryPercent}}" 
-      bind:percentChange="handlePercentChange"
-    />
+  <view class="card-container">
+    <view class="nav-card" bindtap="gotoBLEScan">
+      <view class="card-icon">📡</view>
+      <view class="card-text">
+        <view class="card-title">蓝牙扫描</view>
+        <view class="card-desc">搜索并连接蓝牙设备</view>
+      </view>
+      <view class="card-arrow">›</view>
     </view>
     
-    <view style="display: flex;">
-      <button class="btn.listdata">
-        <view style="font-size: 10px">图片</view>
-        <view style="font-size: 10px">电压</view>
-        <view style="font-size: 10px">{{Pack_Data.voltage}}V</view>
-      </button>
-      <button class="btn.listdata">
-        <view style="font-size: 10px">图片</view>
-        <view style="font-size: 10px">电流</view>
-        <view style="font-size: 10px">{{Pack_Data.current}}A</view>
-      </button>
-      <button class="btn.listdata">
-        <view style="font-size: 10px">图片</view>
-        <view style="font-size: 10px">功率</view>
-        <view style="font-size: 10px">{{Pack_Data.power}}W</view>
-      </button>
-    </view>
-    <view style="display: flex;">
-      <button class="btn.listdata">
-        <view style="font-size: 10px">图片</view>
-        <view style="font-size: 10px">容量</view>
-        <view style="font-size: 10px">{{Pack_Data.cap}}Ah</view>
-      </button>
-      <button class="btn.listdata">
-        <view style="font-size: 10px">图片</view>
-        <view style="font-size: 10px">循环次数</view>
-        <view style="font-size: 10px">{{Pack_Data.count}}</view>
-      </button>
-      <button class="btn.listdata">
-        <view style="font-size: 10px">图片</view>
-        <view style="font-size: 10px">待机</view>
-        <view style="font-size: 10px">{{Pack_Data.statue}}</view>
-      </button>
-    </view>
-  </view>
-  <view wx:if="{{mainwindow_Index === 2}}">
-    <cell-voltage 
-    cellData="{{Cell_Data}}"
-    title="单体电压"
-    unit="mV"
-    columns="5"
-    bind:celltap="onCellClick"
-  />
-  <cell-voltage 
-    cellData="{{Temp_data}}"
-    title="温度"
-    unit="℃"
-    columns="5"
-    bind:celltap="onCellClick"
-  />
-  <!-- 
-  <view style="font-size: 20px">单体电压</view>
-    <view class="cell-grid">
-      <view wx:for="{{Cell_Data}}" wx:key="index" class="cell-item">
-        <button class="btn.listdata.cell">
-          <view style="font-size: 10px">单体{{item.index}}</view>
-          <view style="font-size: 10px">{{item.value}}mV</view>
-        </button>
+    <view class="nav-card" bindtap="gotoDataOverview">
+      <view class="card-icon">🔋</view>
+      <view class="card-text">
+        <view class="card-title">数据概览</view>
+        <view class="card-desc">查看电池实时数据</view>
       </view>
+      <view class="card-arrow">›</view>
     </view>
-   -->
-    <!--
-      <view style="font-size: 20px">温度</view>
-    <view class="cell-grid">
-      <view wx:for="{{Temp_data}}" wx:key="index" class="cell-item">
-        <button class="btn.listdata.cell">
-          <view style="font-size: 10px">温度{{item.index}}</view>
-          <view style="font-size: 10px">{{item.value}}℃</view>
-        </button>
-      </view>
-    </view>
-    -->
     
+    <view class="nav-card" bindtap="gotoDataDetail">
+      <view class="card-icon">📊</view>
+      <view class="card-text">
+        <view class="card-title">详细数据</view>
+        <view class="card-desc">查看单体电压和温度</view>
+      </view>
+      <view class="card-arrow">›</view>
+    </view>
   </view>
 </view>
-<!--底部导航栏-->
+<!--底部导航栏
 <bottom
 currentIndex="{{mainwindow_Index}}" 
 bind:switchtab="onBottomNavSwitch"
 />
+-->

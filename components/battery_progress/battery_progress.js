@@ -1,48 +1,81 @@
-// components/battery_progress/battery_progress.js
 Component({
-
-  /**
-   * 组件的属性列表
-   */
   properties: {
     percent: {
       type: Number,
-      value: 50,
+      value: 0,
       observer: function(newVal) {
-        // 当percent变化时自动更新状态
-        this.updateBatteryStatus(newVal);
+        this.updateBatteryState(newVal);
       }
+    },
+    voltage: {
+      type: String,
+      value: '0.0'
+    },
+    isCharging: {
+      type: Boolean,
+      value: false,
+      observer: function(newVal) {
+        this.updateChargeState(newVal);
+      }
+    },
+    batteryWidth: {
+      type: Number,
+      value: 50
+    },
+    batteryHeight: {
+      type: Number,
+      value: 100
     }
   },
 
-  /**
-   * 组件的初始数据
-   */
-  data: function() {
-    return {
-      batteryLevel: 'full'
-    }
+  data: {
+    batteryLevelClass: 'low',
+    fillHeight: 0,
+    isChargingState: false
   },
 
-  /**
-   * 组件的方法列表
-   */
   methods: {
-    // 根据百分比更新电池状态
-    updateBatteryStatus: function(percent) {
-      let level = 'full';
-      if (percent <= 30) {
-        level = 'low';
-      } else if (percent <= 60) {
-        level = 'med';
+    updateBatteryState(percent) {
+      // 限制百分比范围
+      const safePercent = Math.min(100, Math.max(0, percent));
+      
+      // 计算填充高度
+      const fillHeight = safePercent;
+      
+      // 确定电池状态等级
+      let levelClass = 'low';
+      if (safePercent <= 15) {
+        levelClass = 'critical';
+      } else if (safePercent <= 30) {
+        levelClass = 'low';
+      } else if (safePercent <= 70) {
+        levelClass = 'med';
+      } else {
+        levelClass = 'full';
       }
-      this.setData({ batteryLevel: level });
+
+      this.setData({
+        fillHeight: fillHeight,
+        batteryLevelClass: levelClass
+      });
     },
 
-  // 外部可调用的方法：设置电量
-    setBatteryLevel: function(newPercent) {
-      newPercent = Math.max(0, Math.min(100, newPercent));
-      this.setData({ percent: newPercent });
-    } 
+    updateChargeState(isCharging) {
+      let newClass = this.data.batteryLevelClass;
+      if (isCharging) {
+        newClass += ' charging';
+      }
+      this.setData({
+        isChargingState: isCharging,
+        batteryLevelClass: newClass
+      });
+    }
+  },
+
+  lifetimes: {
+    attached() {
+      this.updateBatteryState(this.data.percent);
+      this.updateChargeState(this.data.isCharging);
+    }
   }
 })

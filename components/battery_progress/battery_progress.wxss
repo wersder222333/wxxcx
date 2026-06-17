@@ -1,69 +1,155 @@
-/* components/battery_progress/battery_progress.wxss */
-/* battery-progress.wxss */
 .battery-container {
-  height: 23.33vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  padding: 20px;
 }
 
+/* 电池整体 - 直立放置 */
 .battery {
-  color: #34495e;
-  border: 1px solid currentColor;
-  display: inline-block;
-  width: 23.33vw;
-  height: 23.33vh;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+}
+
+/* 电池主体 */
+.battery-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #666;
   border-radius: 4px;
-  box-sizing: border-box;
+  overflow: hidden;
+  background: #1a1a2e;
+  box-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.3),
+    inset 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
-/* 电池正极 */
-.battery::before {
-  content: "";
-  position: absolute;
-  top: 10%;
-  bottom: 10%;
-  right: -6px;
-  width: 3px;
-  border: 1px solid currentColor;
-  border-left: 0;
-  box-sizing: border-box;
+/* 电池头部（正极凸起） */
+.battery-cap {
+  width: 40%;
+  height: 8px;
+  background: #666;
+  border-radius: 3px 3px 0 0;
+  margin-bottom: -2px;
+  z-index: 1;
 }
 
-/* 电池内部电量填充 */
-.battery::after {
-  content: "";
+/* 电池底部 */
+.battery-bottom {
+  width: 100%;
+  height: 4px;
+  background: #666;
+  border-radius: 0 0 4px 4px;
+  margin-top: -2px;
+}
+
+/* 电量填充层 - 从底部向上填充 */
+.battery-fill {
   position: absolute;
-  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  margin: 2px;
-  border-radius: 2px;
-  background-color: currentColor;
-  transition: right 500ms ease;
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    transparent 50%, 
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  transition: height 800ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 2px 2px;
 }
 
-/* 不同电量状态的颜色 */
-.battery.low { color: #c0392b; }
-.battery.low::after { right: 80%; }
+/* 不同电量状态的颜色 - 带渐变效果 */
+.battery.low .battery-fill {
+  background: linear-gradient(180deg, 
+    #ff6b6b 0%, 
+    #c0392b 100%
+  );
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.5);
+}
 
-.battery.med { color: #f39c12; }
-.battery.med::after { right: 40%; }
+.battery.med .battery-fill {
+  background: linear-gradient(180deg, 
+    #fdcb6e 0%, 
+    #f39c12 100%
+  );
+  box-shadow: 0 0 8px rgba(243, 156, 18, 0.5);
+}
 
-.battery.full { color: #27ae60; }
-.battery.full::after { right: 0%; }
+.battery.full .battery-fill {
+  background: linear-gradient(180deg, 
+    #55efc4 0%, 
+    #27ae60 100%
+  );
+  box-shadow: 0 0 8px rgba(39, 174, 96, 0.5);
+}
 
+/* 电量百分比文字 */
 .battery-text {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 14px;
+  font-size: 16px;
   color: #fff;
   z-index: 2;
   font-weight: bold;
-  text-shadow: 0 0 2px rgba(0,0,0,0.5);
+  text-shadow: 
+    0 0 4px rgba(0, 0, 0, 0.8),
+    0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* 电池信息区域 */
+.battery-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.battery-percent {
+  font-size: 32px;
+  font-weight: bold;
+  color: #2d3436;
+  line-height: 1.2;
+}
+
+.battery-voltage {
+  font-size: 14px;
+  color: #636e72;
+  margin-top: 4px;
+}
+
+/* 充电状态动画 */
+.battery.charging .battery-fill {
+  animation: chargingPulse 1.5s ease-in-out infinite;
+}
+
+.battery.charging .battery-cap {
+  background: #27ae60;
+  animation: capPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes chargingPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes capPulse {
+  0%, 100% { background: #27ae60; }
+  50% { background: #55efc4; }
+}
+
+/* 低电量警告闪烁 */
+.battery.critical .battery-fill {
+  animation: criticalBlink 0.8s ease-in-out infinite;
+}
+
+@keyframes criticalBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }

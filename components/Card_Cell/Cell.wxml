@@ -5,13 +5,16 @@
   <!-- 单体电压网格 -->
   <view class="cell-grid">
     <view 
-      wx:for="{{cellData}}" 
-      wx:key="index" 
+      wx:for="{{displayArray}}" 
+      wx:for-index="idx"
+      wx:key="idx" 
       class="cell-item"
+      data-index="{{idx}}"
+      bindtap="onCellTap"
     >
       <view class="cell-button">
-        <view class="cell-index">单体{{item.index}}</view>
-        <view class="cell-value">{{item.value}}{{unit}}</view>
+        <view class="cell-index">单体{{idx + 1}}</view>
+        <view class="cell-value">{{item}}{{unit}}</view>
       </view>
     </view>
   </view>

@@ -1,6 +1,24 @@
-<!--components/battery_progress/battery_progress.wxml-->
 <view class="battery-container">
-  <view class="battery {{batteryLevel}}">
-    <text class="battery-text">{{percent}}%</text>
+  <view class="battery {{batteryLevelClass}}" style="height: {{batteryHeight}}px; width: {{batteryWidth}}px;">
+    <!-- 电池头部（正极凸起） -->
+    <view class="battery-cap"></view>
+    
+    <!-- 电池主体 -->
+    <view class="battery-body">
+      <!-- 电量填充层 -->
+      <view class="battery-fill" style="height: {{fillHeight}}%;"></view>
+      
+      <!-- 电量百分比文字 -->
+      <text class="battery-text">{{percent}}%</text>
+    </view>
+    
+    <!-- 电池底部 -->
+    <view class="battery-bottom"></view>
+  </view>
+  
+  <!-- 电量和电压信息 -->
+  <view class="battery-info">
+    <text class="battery-percent">{{percent}}%</text>
+    <text class="battery-voltage">{{voltage}}V</text>
   </view>
 </view>
