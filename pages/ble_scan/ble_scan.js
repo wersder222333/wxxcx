@@ -23,7 +23,7 @@ const COMMAND_QUEUE = [
 ];
 Page({
   data: {
-    devices: [],
+
     deviceCount: 0,
     isScanning: false,
     isConnected: false,
@@ -66,20 +66,23 @@ Page({
   },
 
   onShow() {
-    // 每次页面显示时刷新设备列表
-    this.loadDeviceList();
+    this.setData({
+        isConnected:app.globalData.isConnected
+    });
+     // 每次页面显示时刷新设备列表
+     this.loadDeviceList();
     // 自动开始扫描
     if (!this.data.isScanning && this.data.adapterReady) {
-      this.startScan();
+      // this.startScan();
     }
   },
 
   onHide() {
-    this.stopScan();
+    // this.stopScan();
   },
 
   onUnload() {
-    this.stopScan();
+    // this.stopScan();
     // 注意：不要关闭蓝牙适配器，因为其他页面可能还在使用
   },
 
@@ -262,17 +265,16 @@ Page({
   /**
    * 设置命令超时检测
    */
-  setupCommandTimeout(commandName, timeout) {
+  setupCommandTimeout(commandName, timeout) 
+  {
     const that = this;
-    
     // 清除之前的超时定时器
-    if (this.commandTimeout) {
+    if (this.commandTimeout) 
+    {
       clearTimeout(this.commandTimeout);
     }
-    
     // 标记该命令尚未收到响应
     this.responseReceived[commandName] = false;
-    
     // 设置超时
     this.commandTimeout = setTimeout(() => {
       if (!that.responseReceived[commandName]) {
@@ -280,7 +282,6 @@ Page({
       }
     }, timeout);
   },
-
 /**
  * 停止数据查询
  */
@@ -304,7 +305,7 @@ stopDataQuery() {
 },
   // 添加新发现的设备（去重）
   addDevices(newDevices) {
-    const currentDevices = this.data.devices;
+    let currentDevices = [...app.globalData.devices];
     const deviceIds = new Set(currentDevices.map(d => d.deviceId));
     let addedCount = 0;
     
@@ -318,10 +319,15 @@ stopDataQuery() {
     });
 
     if (addedCount > 0) {
-      this.setData({
-        devices: currentDevices,
-        deviceCount: currentDevices.length
-      });
+      // 更新全局变量
+    app.globalData.devices = currentDevices;
+    app.globalData.deviceCount = currentDevices.length;
+
+    // 同步到页面 data（用于 WXML 渲染）
+    this.setData({
+      devices: currentDevices,
+      deviceCount: currentDevices.length
+    });
     }
   },
 
@@ -363,12 +369,22 @@ stopDataQuery() {
   // 切换扫描状态
   toggleScan() {
     if (this.data.isScanning) {
-      this.stopScan();
+      // this.stopScan();
     } else {
-      this.startScan();
+      // this.startScan();
     }
   },
-
+  //设备管理
+  onDeviceTap(e){
+    if(app.globalData.isConnected)
+    {
+      this.onDeviceDisconnect(e);
+    }
+    else
+    {
+      this.onDeviceConnect(e);
+    }
+  },
   // 连接设备
   onDeviceConnect(e) {
     const deviceId = e.currentTarget.dataset.deviceId;
@@ -387,7 +403,7 @@ stopDataQuery() {
     });
 
     // 停止扫描
-    this.stopScan();
+    // this.stopScan();
 
     // 使用蓝牙管理器连接
     bluetoothManager.connect(deviceId, name)
@@ -405,10 +421,40 @@ stopDataQuery() {
         });
       });
   },
-
+  onDeviceDisconnect(e){
+    const deviceId = e.currentTarget.dataset.deviceId;
+    const name = e.currentTarget.dataset.name;
+    this.stopDataQuery();
+    if (!deviceId) {
+      wx.showToast({ title: '设备ID无效', icon: 'none' });
+      return;
+    }
+    console.log('[扫描页面] 尝试断开设备', { deviceId, name });
+    wx.showLoading({
+      title: '断开中...',
+      mask: true
+    });
+    // 开始扫描
+    // this.startScan();
+    // 使用蓝牙管理器连接
+    bluetoothManager.disconnect(deviceId, name)
+      .then(() => {
+        wx.hideLoading();
+        // 连接成功的处理在 onConnected 回调中完成
+      })
+      .catch(err => {
+        wx.hideLoading();
+        console.error('断开失败', err);
+        wx.showModal({
+          title: '断开失败',
+          content: '无法断开该设备，请重试',
+          showCancel: false
+        });
+      });
+  },
   // 加载设备列表
   loadDeviceList() {
-    const deviceList = bluetoothManager.getDeviceList();
+    const deviceList = app.globalData.devices || [];
     this.setData({
       devices: deviceList,
       deviceCount: deviceList.length

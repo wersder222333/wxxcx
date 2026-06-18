@@ -18,7 +18,7 @@
       class="device-item"
       data-device-id="{{item.deviceId}}"
       data-name="{{item.name || item.localName || '未知设备'}}"
-      bindtap="onDeviceConnect"
+      bindtap="onDeviceTap"
       hover-class="device-item-hover"
     >
       <view class="device-info">

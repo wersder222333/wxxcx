@@ -188,7 +188,52 @@ export default class BluetoothManager {
       });
     });
   }
-
+  disconnect(deviceId){
+    this._deviceId = deviceId;
+    if (!deviceId) 
+    {
+      console.error('[蓝牙管理器] 断开连接失败：未指定设备ID');
+      return Promise.reject({
+        errMsg: '未指定设备ID',
+        errCode: 10013
+      });
+    }
+    return new Promise((resolve, reject) => {
+      wx.closeBLEConnection({
+        deviceId: deviceId,
+        success: (res) => {
+          console.log('[蓝牙管理器] 断开连接成功', res);
+          this._connected = false;
+          this._deviceId = null;
+          
+          // 触发断开连接回调
+          if (this._callbacks.onDisconnected) {
+            this._callbacks.onDisconnected(targetDeviceId);
+          }
+          
+          resolve(res);
+        },
+        fail: (err) => {
+          console.error('[蓝牙管理器] 断开连接失败', err);
+          // 即使API调用失败，也更新本地状态
+          // 因为蓝牙连接可能已经断开，只是API没有正确回调
+          if (err.errCode === 10006) { // 当前连接已断开
+            console.log('[蓝牙管理器] 设备已处于断开状态');
+            this._connected = false;
+            this._deviceId = null;
+            resolve(err); // 视为成功处理
+          } else {
+            reject(err);
+          }
+        },
+        complete: () => {
+          console.log('[蓝牙管理器] 断开连接操作完成');
+          // 无论成功失败，停止所有监听
+          this._stopAllListeners();
+        }
+      });
+    });
+  }
   /**
    * 监听连接状态变化
    * @private

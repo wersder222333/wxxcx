@@ -24,6 +24,7 @@ App({
     //温度探头数量
     temp_num:0,
     // 数据更新时间戳
-    lastUpdateTime: ''
+    lastUpdateTime: '',
+    devices: [],
   }
 })
